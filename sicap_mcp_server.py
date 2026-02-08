@@ -17,6 +17,24 @@ mcp = FastMCP("SICAP API Server")
 SICAP_API_BASE = "https://api.sicap.ai/v1"
 
 
+def format_error_response(error: Exception) -> Dict[str, Any]:
+    """
+    Format an error into a consistent response structure.
+    
+    Args:
+        error: The exception that occurred
+    
+    Returns:
+        Dictionary with error information
+    """
+    if isinstance(error, httpx.HTTPError):
+        return {
+            "error": f"HTTP error occurred: {str(error)}",
+            "status_code": getattr(error.response, 'status_code', None) if hasattr(error, 'response') else None
+        }
+    return {"error": f"An error occurred: {str(error)}"}
+
+
 @mcp.tool()
 async def search_contracts(
     query: str,
@@ -47,13 +65,8 @@ async def search_contracts(
             )
             response.raise_for_status()
             return response.json()
-        except httpx.HTTPError as e:
-            return {
-                "error": f"HTTP error occurred: {str(e)}",
-                "status_code": getattr(e.response, 'status_code', None) if hasattr(e, 'response') else None
-            }
         except Exception as e:
-            return {"error": f"An error occurred: {str(e)}"}
+            return format_error_response(e)
 
 
 @mcp.tool()
@@ -77,13 +90,8 @@ async def get_contract_details(
             )
             response.raise_for_status()
             return response.json()
-        except httpx.HTTPError as e:
-            return {
-                "error": f"HTTP error occurred: {str(e)}",
-                "status_code": getattr(e.response, 'status_code', None) if hasattr(e, 'response') else None
-            }
         except Exception as e:
-            return {"error": f"An error occurred: {str(e)}"}
+            return format_error_response(e)
 
 
 @mcp.tool()
@@ -119,13 +127,8 @@ async def get_organizations(
             )
             response.raise_for_status()
             return response.json()
-        except httpx.HTTPError as e:
-            return {
-                "error": f"HTTP error occurred: {str(e)}",
-                "status_code": getattr(e.response, 'status_code', None) if hasattr(e, 'response') else None
-            }
         except Exception as e:
-            return {"error": f"An error occurred: {str(e)}"}
+            return format_error_response(e)
 
 
 @mcp.tool()
@@ -154,13 +157,8 @@ async def get_statistics(
             )
             response.raise_for_status()
             return response.json()
-        except httpx.HTTPError as e:
-            return {
-                "error": f"HTTP error occurred: {str(e)}",
-                "status_code": getattr(e.response, 'status_code', None) if hasattr(e, 'response') else None
-            }
         except Exception as e:
-            return {"error": f"An error occurred: {str(e)}"}
+            return format_error_response(e)
 
 
 if __name__ == "__main__":
