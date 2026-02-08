@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sicap": {
+      "command": "python3",
+      "args": [
+        "/home/runner/work/skills-copilot-codespaces-vscode/skills-copilot-codespaces-vscode/sicap_mcp_server.py"
+      ],
+      "env": {}
+    }
+  }
+}
